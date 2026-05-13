@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kalakar – Handicrafts & Artisans</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:wght@300;400;500&family=Raleway:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream: #f5ede0;
+      --warm-white: #fdf8f2;
+      --terracotta: #c0603a;
+      --terracotta-dark: #9a4a2c;
+      --ochre: #d4933a;
+      --forest: #3a5c3e;
+      --clay: #8c5e3c;
+      --ink: #1e1612;
+      --text-muted: #6b5240;
+      --border: rgba(140,94,60,0.2);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      background: var(--warm-white);
+      color: var(--ink);
+      cursor: none;
+    }
+
+    /* Custom cursor */
+    .cursor {
+      width: 12px; height: 12px;
+      background: var(--terracotta);
+      border-radius: 50%;
+      position: fixed; top:0; left:0;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.15s ease;
+      mix-blend-mode: multiply;
+    }
+    .cursor-follower {
+      width: 36px; height: 36px;
+      border: 1.5px solid var(--terracotta);
+      border-radius: 50%;
+      position: fixed; top:0; left:0;
+      pointer-events: none;
+      z-index: 9998;
+      transition: all 0.3s ease;
+      opacity: 0.6;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top:0; width:100%; z-index: 1000;
+      padding: 18px 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(253,248,242,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      transition: padding 0.3s;
+    }
+    nav.scrolled { padding: 12px 60px; }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.7rem; font-weight: 700;
+      color: var(--terracotta);
+      letter-spacing: 0.02em;
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--ochre); font-style: italic; }
+    .nav-links { display: flex; gap: 40px; list-style: none; }
+    .nav-links a {
+      font-family: 'Raleway', sans-serif;
+      font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--text-muted); text-decoration: none;
+      position: relative; padding-bottom: 4px;
+      transition: color 0.3s;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute; bottom:0; left:0;
+      width:0; height:1.5px;
+      background: var(--terracotta);
+      transition: width 0.3s ease;
+    }
+    .nav-links a:hover { color: var(--terracotta); }
+    .nav-links a:hover::after { width:100%; }
+
+    /* HERO */
+    #home {
+      min-height: 100vh;
+      display: grid; grid-template-columns: 1fr 1fr;
+      position: relative; overflow: hidden;
+    }
+    .hero-left {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 140px 60px 80px;
+      position: relative; z-index: 2;
+    }
+    .hero-tag {
+      font-family: 'Raleway', sans-serif;
+      font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--ochre); margin-bottom: 20px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .hero-tag::before {
+      content: ''; display: block;
+      width: 40px; height: 1px; background: var(--ochre);
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 5vw, 5.5rem);
+      line-height: 1.05; font-weight: 700;
+      color: var(--ink); margin-bottom: 28px;
+    }
+    .hero-title em { color: var(--terracotta); font-style: italic; }
+    .hero-desc {
+      font-size: 1.15rem; line-height: 1.9;
+      color: var(--text-muted); max-width: 440px;
+      font-weight: 300; margin-bottom: 48px;
+    }
+    .btn-group { display: flex; gap: 20px; align-items: center; }
+    .btn-primary {
+      display: inline-block;
+      padding: 16px 40px;
+      background: var(--terracotta);
+      color: #fff; text-decoration: none;
+      font-family: 'Raleway', sans-serif;
+      font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      transition: all 0.3s; border: none; cursor: none;
+    }
+    .btn-primary:hover { background: var(--terracotta-dark); transform: translateY(-2px); }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 10px;
+      color: var(--text-muted); text-decoration: none;
+      font-family: 'Raleway', sans-serif;
+      font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      transition: color 0.3s; cursor: none;
+    }
+    .btn-ghost:hover { color: var(--terracotta); }
+    .btn-ghost svg { transition: transform 0.3s; }
+    .btn-ghost:hover svg { transform: translateX(4px); }
+
+    .hero-right {
+      position: relative;
+      background: var(--cream);
+      overflow: hidden;
+    }
+    .hero-pattern {
+      position: absolute; inset: 0;
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(192,96,58,0.12) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(212,147,58,0.1) 0%, transparent 50%);
+    }
+    .hero-art {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .mandala {
+      width: 500px; height: 500px;
+      position: relative;
+    }
+    .mandala svg {
+      width: 100%; height: 100%;
+      animation: rotateSlow 40s linear infinite;
+      opacity: 0.15;
+    }
+    .mandala-inner {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .mandala-inner svg {
+      width: 300px; height: 300px;
+      animation: rotateSlow 25s linear infinite reverse;
+      opacity: 0.2;
+    }
+    @keyframes rotateSlow { to { transform: rotate(360deg); } }
+
+    .hero-craft-cards {
+      position: absolute; bottom: 60px; left: 40px; right: 40px;
+      display: flex; gap: 16px;
+    }
+    .craft-chip {
+      padding: 10px 20px;
+      background: rgba(253,248,242,0.85);
+      border: 1px solid var(--border);
+      font-family: 'Raleway', sans-serif;
+      font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--clay);
+      backdrop-filter: blur(8px);
+      animation: floatUp 0.6s ease forwards;
+      opacity: 0;
+    }
+    .craft-chip:nth-child(1) { animation-delay: 0.8s; }
+    .craft-chip:nth-child(2) { animation-delay: 1.0s; }
+    .craft-chip:nth-child(3) { animation-delay: 1.2s; }
+    @keyframes floatUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+    .hero-stats {
+      display: flex; gap: 50px; margin-top: 60px;
+      padding-top: 40px; border-top: 1px solid var(--border);
+    }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem; font-weight: 700; color: var(--terracotta);
+      line-height: 1;
+    }
+    .stat-label {
+      font-family: 'Raleway', sans-serif;
+      font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text-muted); margin-top: 6px;
+    }
+
+    /* SECTION BASE */
+    section { position: relative; }
+    .section-tag {
+      font-family: 'Raleway', sans-serif;
+      font-size: 0.68rem; font-weight: 600;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--ochre); margin-bottom: 16px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .section-tag::before {
+      content: ''; display: block;
+      width: 30px; height: 1px; background: var(--ochre);
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 3.5vw, 3.2rem);
+      line-height: 1.15; font-weight: 700; color: var(--ink);
+    }
+    .section-title em { color: var(--terracotta); font-style: italic; }
+
+    /* ABOUT */
+    #about {
+      padding: 120px 60px;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 80px; align-items: center;
+      background: var(--cream);
+    }
+    .about-visual {
+      position: relative;
+    }
+    .about-img-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 16px;
+    }
+    .img-block {
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+    }
+    .img-block:first-child {
+      grid-row: span 2;
+      min-height: 420px;
+    }
+    .img-block:not(:first-child) {
+      min-height: 190px;
+    }
+    .img-placeholder {
+      width: 100%; height: 100%;
+      min-height: inherit;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 12px;
+      font-family: 'Raleway', sans-serif;
+      font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.8);
+      position: relative; overflow: hidden;
+    }
+    .img-placeholder.bg1 { background: linear-gradient(135deg, #c0603a 0%, #9a4a2c 100%); }
+    .img-placeholder.bg2 { background: linear-gradient(135deg, #d4933a 0%, #b07a2a 100%); }
+    .img-placeholder.bg3 { background: linear-gradient(135deg, #3a5c3e 0%, #2a4430 100%); }
+    .img-placeholder svg { opacity: 0.6; }
+
+    .about-badge {
+      position: absolute;
+      bottom: -20px; right: -20px;
+      width: 120px; height: 120px;
+      background: var(--ink);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column;
+      color: var(--cream);
+      text-align: center;
+      z-index: 3;
+    }
+    .about-badge-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem; font-weight: 700; line-height: 1;
+      color: var(--ochre);
+    }
+    .about-badge-text {
+      font-family: 'Raleway', sans-serif;
+      font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(245,237,224,0.7);
+      margin-top: 4px;
+    }
+
+    .about-content {}
+    .about-content .section-title { margin-bottom: 24px; }
+    .about-desc {
+      font-size: 1.05rem; line-height: 2;
+      color: var(--text-muted); font-weight: 300;
+      margin-bottom: 20px;
+    }
+    .about-values {
+      display: flex; flex-direction: column; gap: 16px;
+      margin-top: 36px;
+    }
+    .value-item {
+      display: flex; align-items: flex-start; gap: 20px;
+      padding: 20px; background: var(--warm-white);
+      border-left: 3px solid var(--terracotta);
+    }
+    .value-icon {
+      width: 40px; height: 40px; flex-shrink: 0;
+      color: var(--terracotta);
+    }
+    .value-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem; font-weight: 700; color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .value-text {
+      font-size: 0.9rem; color: var(--text-muted); line-height: 1.7;
+    }
+
+    /* SERVICES */
+    #services {
+      padding: 120px 60px;
+      background: var(--warm-white);
+    }
+    .services-header {
+      display: grid; grid-template-columns: 1fr 1fr;
+      align-items: end; gap: 40px; margin-bottom: 70px;
+    }
+    .services-header p {
+      font-size: 1.05rem; line-height: 1.9;
+      color: var(--text-muted); font-weight: 300;
+      align-self: end;
+    }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+    .service-card {
+      padding: 48px 40px;
+      background: var(--cream);
+      border: 1px solid transparent;
+      position: relative; overflow: hidden;
+      transition: all 0.4s ease;
+      cursor: none;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 3px; height: 0;
+      background: var(--terracotta);
+      transition: height 0.4s ease;
+    }
+    .service-card:hover { background: var(--warm-white); transform: translateY(-4px); box-shadow: 0 20px 60px rgba(30,22,18,0.1); }
+    .service-card:hover::before { height: 100%; }
+    .service-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem; font-weight: 700;
+      color: rgba(192,96,58,0.12);
+      line-height: 1; margin-bottom: 24px;
+    }
+    .service-icon {
+      width: 52px; height: 52px;
+      background: rgba(192,96,58,0.1);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 24px;
+      color: var(--terracotta);
+      transition: background 0.3s;
+    }
+    .service-card:hover .service-icon { background: var(--terracotta); color: #fff; }
+    .service-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; font-weight: 700;
+      color: var(--ink); margin-bottom: 14px;
+    }
+    .service-desc {
+      font-size: 0.95rem; line-height: 1.85;
+      color: var(--text-muted); font-weight: 300;
+      margin-bottom: 28px;
+    }
+    .service-link {
+      font-family: 'Raleway', sans-serif;
+      font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--terracotta); text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: gap 0.3s;
+    }
+    .service-link:hover { gap: 14px; }
+
+    /* FEATURED */
+    .featured-strip {
+      padding: 80px 0;
+      background: var(--terracotta);
+      overflow: hidden;
+    }
+    .strip-inner {
+      display: flex; gap: 80px; align-items: center;
+      animation: scrollStrip 20s linear infinite;
+      white-space: nowrap;
+    }
+    @keyframes scrollStrip {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    .strip-item {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; font-style: italic;
+      color: rgba(253,248,242,0.85);
+      flex-shrink: 0;
+    }
+    .strip-dot {
+      width: 6px; height: 6px;
+      background: rgba(253,248,242,0.4);
+      border-radius: 50%; flex-shrink: 0;
+    }
+
+    /* CONTACT */
+    #contact {
+      padding: 120px 60px;
+      background: var(--ink);
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 100px; align-items: start;
+    }
+    .contact-info .section-tag { color: var(--ochre); }
+    .contact-info .section-tag::before { background: var(--ochre); }
+    .contact-info .section-title { color: var(--cream); }
+    .contact-info .section-title em { color: var(--terracotta); }
+    .contact-tagline {
+      font-size: 1.05rem; line-height: 1.9;
+      color: rgba(245,237,224,0.6); font-weight: 300;
+      margin: 24px 0 48px;
+    }
+    .contact-details { display: flex; flex-direction: column; gap: 28px; }
+    .contact-item {
+      display: flex; align-items: flex-start; gap: 20px;
+    }
+    .contact-item-icon {
+      width: 44px; height: 44px; flex-shrink: 0;
+      border: 1px solid rgba(245,237,224,0.15);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--ochre);
+    }
+    .contact-item-label {
+      font-family: 'Raleway', sans-serif;
+      font-size: 0.68rem; font-weight: 600;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: rgba(245,237,224,0.4); margin-bottom: 6px;
+    }
+    .contact-item-value {
+      font-size: 1.05rem; color: var(--cream);
+      font-weight: 300;
+    }
+
+    /* FORM */
+    .contact-form { display: flex; flex-direction: column; gap: 20px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .form-group { display: flex; flex-direction: column; gap: 8px; }
+    .form-group label {
+      font-family: 'Raleway', sans-serif;
+      font-size: 0.68rem; font-weight: 600;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: rgba(245,237,224,0.5);
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(245,237,224,0.12);
+      color: var(--cream);
+      padding: 14px 18px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem; font-weight: 300;
+      outline: none;
+      transition: border-color 0.3s;
+      cursor: none;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus { border-color: var(--terracotta); }
+    .form-group textarea { min-height: 130px; resize: vertical; }
+    .form-group select option { background: var(--ink); }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: rgba(245,237,224,0.25); }
+    .btn-submit {
+      padding: 18px 48px;
+      background: var(--terracotta);
+      color: #fff; border: none;
+      font-family: 'Raleway', sans-serif;
+      font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      cursor: none; transition: all 0.3s;
+      align-self: flex-start;
+    }
+    .btn-submit:hover { background: var(--ochre); transform: translateY(-2px); }
+
+    /* FOOTER */
+    footer {
+      padding: 40px 60px;
+      background: #120e0b;
+      display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; color: var(--cream);
+      font-weight: 700;
+    }
+    .footer-logo span { color: var(--terracotta); font-style: italic; }
+    .footer-copy {
+      font-family: 'Raleway', sans-serif;
+      font-size: 0.68rem; letter-spacing: 0.1em;
+      color: rgba(245,237,224,0.3);
+    }
+    .footer-social { display: flex; gap: 16px; }
+    .social-btn {
+      width: 36px; height: 36px;
+      border: 1px solid rgba(245,237,224,0.1);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(245,237,224,0.4);
+      text-decoration: none;
+      transition: all 0.3s; cursor: none;
+    }
+    .social-btn:hover { border-color: var(--terracotta); color: var(--terracotta); }
+
+    /* SCROLL REVEAL */
+    .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16,1,0.3,1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* MOBILE */
+    @media (max-width: 900px) {
+      nav { padding: 16px 24px; }
+      .nav-links { gap: 20px; }
+      #home { grid-template-columns: 1fr; }
+      .hero-left { padding: 120px 24px 60px; }
+      .hero-right { min-height: 300px; }
+      #about { grid-template-columns: 1fr; padding: 80px 24px; gap: 50px; }
+      #services { padding: 80px 24px; }
+      .services-header { grid-template-columns: 1fr; }
+      .services-grid { grid-template-columns: 1fr; }
+      #contact { grid-template-columns: 1fr; padding: 80px 24px; gap: 60px; }
+      footer { flex-direction: column; gap: 20px; padding: 30px 24px; text-align: center; }
+      .form-row { grid-template-columns: 1fr; }
+      body { cursor: auto; }
+      .cursor, .cursor-follower { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="cursorFollower"></div>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="#home" class="nav-logo">Kala<span>kar</span></a>
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="home">
+    <div class="hero-left">
+      <div class="hero-tag reveal">Handmade with Heritage</div>
+      <h1 class="hero-title reveal">
+        Where <em>Ancient</em><br/>
+        Craft Meets<br/>
+        Modern Soul
+      </h1>
+      <p class="hero-desc reveal">
+        We connect master artisans with the world — celebrating centuries-old traditions, one handcrafted piece at a time.
+      </p>
+      <div class="btn-group reveal">
+        <a href="#services" class="btn-primary">Explore Crafts</a>
+        <a href="#about" class="btn-ghost">
+          Our Story
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M3 8h10M9 4l4 4-4 4"/>
+          </svg>
+        </a>
+      </div>
+      <div class="hero-stats reveal">
+        <div>
+          <div class="stat-num">200+</div>
+          <div class="stat-label">Artisans</div>
+        </div>
+        <div>
+          <div class="stat-num">40+</div>
+          <div class="stat-label">Craft Forms</div>
+        </div>
+        <div>
+          <div class="stat-num">15</div>
+          <div class="stat-label">States</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="hero-pattern"></div>
+      <div class="hero-art">
+        <div class="mandala">
+          <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="200" cy="200" r="190" stroke="#c0603a" stroke-width="1"/>
+            <circle cx="200" cy="200" r="160" stroke="#c0603a" stroke-width="0.5"/>
+            <circle cx="200" cy="200" r="130" stroke="#d4933a" stroke-width="1"/>
+            <circle cx="200" cy="200" r="100" stroke="#c0603a" stroke-width="0.5"/>
+            <circle cx="200" cy="200" r="70" stroke="#d4933a" stroke-width="1"/>
+            <circle cx="200" cy="200" r="40" stroke="#c0603a" stroke-width="0.5"/>
+            <g stroke="#c0603a" stroke-width="0.8">
+              <line x1="200" y1="10" x2="200" y2="390"/>
+              <line x1="10" y1="200" x2="390" y2="200"/>
+              <line x1="65" y1="65" x2="335" y2="335"/>
+              <line x1="335" y1="65" x2="65" y2="335"/>
+              <line x1="26" y1="120" x2="374" y2="280"/>
+              <line x1="120" y1="26" x2="280" y2="374"/>
+              <line x1="374" y1="120" x2="26" y2="280"/>
+              <line x1="280" y1="26" x2="120" y2="374"/>
+            </g>
+            <g fill="#d4933a">
+              <circle cx="200" cy="10" r="4"/>
+              <circle cx="200" cy="390" r="4"/>
+              <circle cx="10" cy="200" r="4"/>
+              <circle cx="390" cy="200" r="4"/>
+              <circle cx="65" cy="65" r="3"/>
+              <circle cx="335" cy="335" r="3"/>
+              <circle cx="335" cy="65" r="3"/>
+              <circle cx="65" cy="335" r="3"/>
+            </g>
+          </svg>
+          <div class="mandala-inner">
+            <svg viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="150" cy="150" r="140" stroke="#c0603a" stroke-width="1.5"/>
+              <circle cx="150" cy="150" r="100" stroke="#d4933a" stroke-width="1"/>
+              <circle cx="150" cy="150" r="60" stroke="#c0603a" stroke-width="1.5"/>
+              <circle cx="150" cy="150" r="25" stroke="#d4933a" stroke-width="1"/>
+              <path d="M150 10 L160 140 L150 150 L140 140 Z" fill="#c0603a" opacity="0.4"/>
+              <path d="M290 150 L160 160 L150 150 L160 140 Z" fill="#d4933a" opacity="0.4"/>
+              <path d="M150 290 L140 160 L150 150 L160 160 Z" fill="#c0603a" opacity="0.4"/>
+              <path d="M10 150 L140 140 L150 150 L140 160 Z" fill="#d4933a" opacity="0.4"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="hero-craft-cards">
+        <div class="craft-chip">Pottery</div>
+        <div class="craft-chip">Weaving</div>
+        <div class="craft-chip">Embroidery</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="about-visual reveal">
+      <div class="about-img-grid">
+        <div class="img-block">
+          <div class="img-placeholder bg1">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="white" stroke-width="1.5">
+              <ellipse cx="24" cy="28" rx="14" ry="10"/>
+              <path d="M10 28 Q10 14 24 10 Q38 14 38 28"/>
+              <path d="M18 18 Q24 14 30 18"/>
+            </svg>
+            <span>Master Potter</span>
+          </div>
+        </div>
+        <div class="img-block">
+          <div class="img-placeholder bg2">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="white" stroke-width="1.5">
+              <path d="M5 35 L20 5 L35 35"/>
+              <path d="M12 22 L28 22"/>
+            </svg>
+            <span>Weaving Art</span>
+          </div>
+        </div>
+        <div class="img-block">
+          <div class="img-placeholder bg3">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="white" stroke-width="1.5">
+              <circle cx="20" cy="20" r="12"/>
+              <path d="M8 8 L32 32 M32 8 L8 32"/>
+              <circle cx="20" cy="20" r="4"/>
+            </svg>
+            <span>Embroidery</span>
+          </div>
+        </div>
+      </div>
+      <div class="about-badge">
+        <div class="about-badge-num">25+</div>
+        <div class="about-badge-text">Years of Heritage</div>
+      </div>
+    </div>
+
+    <div class="about-content reveal">
+      <div class="section-tag">Our Story</div>
+      <h2 class="section-title">Preserving India's <em>Living</em> Traditions</h2>
+      <p class="about-desc">
+        Kalakar was born from a deep reverence for India's extraordinary craft heritage. We work directly with rural artisan communities, ensuring that timeless skills passed down through generations find their rightful place in the modern world.
+      </p>
+      <p class="about-desc">
+        Every piece in our collection tells a story — of patient hands, of inherited wisdom, of a culture that finds beauty in the everyday.
+      </p>
+      <div class="about-values">
+        <div class="value-item">
+          <svg class="value-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M20 4 L24 14 L36 14 L26 22 L30 34 L20 26 L10 34 L14 22 L4 14 L16 14 Z"/>
+          </svg>
+          <div>
+            <div class="value-title">Authentic Craft</div>
+            <div class="value-text">Every product is handmade using traditional techniques with no compromise on authenticity.</div>
+          </div>
+        </div>
+        <div class="value-item">
+          <svg class="value-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="20" cy="16" r="8"/>
+            <path d="M6 36 C6 28 34 28 34 36"/>
+          </svg>
+          <div>
+            <div class="value-title">Artisan First</div>
+            <div class="value-text">We ensure fair wages and sustainable livelihoods for every craftsperson in our network.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCROLLING STRIP -->
+  <div class="featured-strip">
+    <div class="strip-inner">
+      <span class="strip-item">Madhubani Paintings</span><span class="strip-dot"></span>
+      <span class="strip-item">Warli Art</span><span class="strip-dot"></span>
+      <span class="strip-item">Channapatna Toys</span><span class="strip-dot"></span>
+      <span class="strip-item">Kashmiri Pashmina</span><span class="strip-dot"></span>
+      <span class="strip-item">Blue Pottery Jaipur</span><span class="strip-dot"></span>
+      <span class="strip-item">Dhokra Metal Craft</span><span class="strip-dot"></span>
+      <span class="strip-item">Phulkari Embroidery</span><span class="strip-dot"></span>
+      <!-- repeat for seamless loop -->
+      <span class="strip-item">Madhubani Paintings</span><span class="strip-dot"></span>
+      <span class="strip-item">Warli Art</span><span class="strip-dot"></span>
+      <span class="strip-item">Channapatna Toys</span><span class="strip-dot"></span>
+      <span class="strip-item">Kashmiri Pashmina</span><span class="strip-dot"></span>
+      <span class="strip-item">Blue Pottery Jaipur</span><span class="strip-dot"></span>
+      <span class="strip-item">Dhokra Metal Craft</span><span class="strip-dot"></span>
+      <span class="strip-item">Phulkari Embroidery</span><span class="strip-dot"></span>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="services-header reveal">
+      <div>
+        <div class="section-tag">What We Offer</div>
+        <h2 class="section-title">Craft Services <em>Tailored</em><br/>for You</h2>
+      </div>
+      <p>From bespoke commissions to workshops and wholesale sourcing, we offer a complete suite of services that connect buyers and makers in meaningful ways.</p>
+    </div>
+
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <div class="service-num">01</div>
+        <div class="service-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div class="service-name">Custom Commissions</div>
+        <div class="service-desc">Work directly with artisans to create bespoke pieces tailored to your vision — from home décor to wearable art.</div>
+        <a href="#contact" class="service-link">Enquire Now →</a>
+      </div>
+
+      <div class="service-card reveal">
+        <div class="service-num">02</div>
+        <div class="service-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 6v6l4 2"/>
+          </svg>
+        </div>
+        <div class="service-name">Craft Workshops</div>
+        <div class="service-desc">Immersive hands-on workshops led by master craftspeople. Available in-person and as curated online experiences.</div>
+        <a href="#contact" class="service-link">Book a Session →</a>
+      </div>
+
+      <div class="service-card reveal">
+        <div class="service-num">03</div>
+        <div class="service-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="3" width="20" height="14" rx="2"/>
+            <path d="M8 21h8M12 17v4"/>
+          </svg>
+        </div>
+        <div class="service-name">Corporate Gifting</div>
+        <div class="service-desc">Thoughtful, sustainable gifting solutions. Handcrafted collections branded or personalised for your organisation.</div>
+        <a href="#contact" class="service-link">Get a Quote →</a>
+      </div>
+
+      <div class="service-card reveal">
+        <div class="service-num">04</div>
+        <div class="service-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </div>
+        <div class="service-name">Home Décor Styling</div>
+        <div class="service-desc">Curated handcraft collections for interior styling. We advise on pieces that bring warmth and story to any space.</div>
+        <a href="#contact" class="service-link">Explore →</a>
+      </div>
+
+      <div class="service-card reveal">
+        <div class="service-num">05</div>
+        <div class="service-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+          </svg>
+        </div>
+        <div class="service-name">Artisan Partnerships</div>
+        <div class="service-desc">Are you a craftsperson? Join our growing network. We support artisans with market access, training, and fair pricing.</div>
+        <a href="#contact" class="service-link">Join Us →</a>
+      </div>
+
+      <div class="service-card reveal">
+        <div class="service-num">06</div>
+        <div class="service-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+            <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 001.95-1.56L23 6H6"/>
+          </svg>
+        </div>
+        <div class="service-name">Wholesale & Export</div>
+        <div class="service-desc">Bulk sourcing for retailers and exporters. We handle quality assurance, documentation, and global shipping logistics.</div>
+        <a href="#contact" class="service-link">Get Started →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact-info reveal">
+      <div class="section-tag">Get In Touch</div>
+      <h2 class="section-title">Let's Create <em>Something</em> Beautiful</h2>
+      <p class="contact-tagline">
+        Whether you're looking to commission a piece, attend a workshop, or partner with us — we'd love to hear from you.
+      </p>
+      <div class="contact-details">
+        <div class="contact-item">
+          <div class="contact-item-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
+          <div>
+            <div class="contact-item-label">Visit Us</div>
+            <div class="contact-item-value">12, Craft Lane, Pune – 411001, Maharashtra</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+          </div>
+          <div>
+            <div class="contact-item-label">Email Us</div>
+            <div class="contact-item-value">hello@kalakar.in</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 012 1.22 2 2 0 014 .04h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="contact-item-label">Call Us</div>
+            <div class="contact-item-value">+91 98765 43210</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-form reveal">
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" placeholder="Prathmesh"/>
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" placeholder="Raut"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" placeholder="your@email.com"/>
+      </div>
+      <div class="form-group">
+        <label>I'm interested in</label>
+        <select>
+          <option value="">Select a service…</option>
+          <option>Custom Commission</option>
+          <option>Craft Workshop</option>
+          <option>Corporate Gifting</option>
+          <option>Artisan Partnership</option>
+          <option>Wholesale / Export</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Your Message</label>
+        <textarea placeholder="Tell us what you have in mind…"></textarea>
+      </div>
+      <button class="btn-submit" onclick="handleSubmit(event)">Send Message</button>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Kala<span>kar</span></div>
+    <div class="footer-copy">© 2025 Kalakar Handicrafts. All rights reserved.</div>
+    <div class="footer-social">
+      <a href="#" class="social-btn" aria-label="Instagram">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="2" width="20" height="20" rx="5"/>
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>
+        </svg>
+      </a>
+      <a href="#" class="social-btn" aria-label="Facebook">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+        </svg>
+      </a>
+      <a href="#" class="social-btn" aria-label="Pinterest">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M9.5 9.5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5c0 2-2 4-2 6"/>
+          <circle cx="12" cy="18" r="0.5" fill="currentColor"/>
+        </svg>
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const follower = document.getElementById('cursorFollower');
+    let mouseX = 0, mouseY = 0, followerX = 0, followerY = 0;
+    document.addEventListener('mousemove', e => {
+      mouseX = e.clientX; mouseY = e.clientY;
+      cursor.style.transform = `translate(${mouseX - 6}px, ${mouseY - 6}px)`;
+    });
+    function animateFollower() {
+      followerX += (mouseX - followerX) * 0.1;
+      followerY += (mouseY - followerY) * 0.1;
+      follower.style.transform = `translate(${followerX - 18}px, ${followerY - 18}px)`;
+      requestAnimationFrame(animateFollower);
+    }
+    animateFollower();
+
+    // Navbar shrink
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // Scroll reveal
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Form submit
+    function handleSubmit(e) {
+      e.preventDefault();
+      const btn = e.target;
+      btn.textContent = 'Message Sent ✓';
+      btn.style.background = '#3a5c3e';
+      setTimeout(() => { btn.textContent = 'Send Message'; btn.style.background = ''; }, 3000);
+    }
+  </script>
+</body>
+</html>
